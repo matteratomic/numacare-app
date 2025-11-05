@@ -46,12 +46,11 @@ export default function TabsLayout() {
         ),
 
       }} />
-      <Tabs.Screen name="patient" options={{
-        title: 'Patient',
+      <Tabs.Screen name="status" options={{
+        title: 'Orders',
         tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="person" size={size} color={color} />
+          <MaterialIcons name="delivery-dining" size={size} color={color} />
         ),
-
       }} />
     </Tabs>
   );

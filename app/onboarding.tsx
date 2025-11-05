@@ -84,12 +84,11 @@ export default function OnboardingScreen() {
         style={{ marginTop: 32 }}
         className="gap-8">
         <View className="gap-3">
-          <Text className="text-4xl font-semibold text-slate-900 dark:text-slate-100">Welcome to NumaCare</Text>
+          <Text style={{width:"70%"}} className="text-4xl font-semibold text-slate-900 dark:text-slate-100">Welcome to NumaCare</Text>
           <Text className="text-base text-slate-600 dark:text-slate-400">
             Explore how the portal coordinates doctors, insurance partners, and patients.
           </Text>
         </View>
-        <View style={{ marginTop: 32 }}></View>
         <Card>
           <View className="gap-6">
             <View className="gap-2">

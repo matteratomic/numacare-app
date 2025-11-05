@@ -26,7 +26,7 @@ export default function OverviewScreen() {
 
   const snapshot = (
     <View className="gap-4">
-      <View className="flex-row flex-wrap gap-4">
+      <View className="flex-wrap gap-4">
         <Card
           tone="default"
           icon="clock"
@@ -57,7 +57,7 @@ export default function OverviewScreen() {
           }
         />
       </View>
-      <View className="flex-row flex-wrap gap-4">
+      <View className="flex-wrap gap-4">
         <Card
           title={`${doctorAlerts.length}`}
           tone="default"
@@ -128,24 +128,7 @@ export default function OverviewScreen() {
               in the loop.
             </Text>
           </View>
-          {/* <View className="items-end gap-2"> */}
-          {/*   {userEmail && ( */}
-          {/*     <Text className="text-xs text-slate-500 dark:text-slate-400"> */}
-          {/*       Signed in as {userEmail} */}
-          {/*     </Text> */}
-          {/*   )} */}
-          {/*   <ThemeToggle className="min-w-[150px]" /> */}
-          {/*   <Link href="/doctor" asChild> */}
-          {/*     <Button variant="primary" className="min-w-[150px]"> */}
-          {/*       New upload */}
-          {/*     </Button> */}
-          {/*   </Link> */}
-          {/*   <Button variant="ghost" onPress={logout}> */}
-          {/*     Sign out */}
-          {/*   </Button> */}
-          {/* </View> */}
         </View>
-
         <TabGroup
           tabs={[
             { key: 'snapshot', label: 'Snapshot', content: snapshot },

@@ -30,7 +30,7 @@ export function Card({
 }: CardProps) {
   return (
     <View
-      className={`flex-row rounded-2xl border bg-white/90 p-5 shadow-sm dark:bg-slate-900/70 ${toneStyles[tone]} ${className ?? ''}`.trim()}>
+      className={`flex-row rounded-2xl border bg-white p-5 dark:bg-slate-900/70 ${toneStyles[tone]} ${className ?? ''}`.trim()}>
       {icon && <View className="bg-sky-500" style={{
         alignItems: "center",
         justifyContent: "center",

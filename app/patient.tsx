@@ -5,11 +5,69 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import { OrderStatusTracker } from '@/components/OrderStatusTracker';
 import { Screen } from '@/components/ui/Screen';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { useWorkflow } from '@/context/WorkflowContext';
 import { formatRelativeTime } from '@/utils/dates';
 import { stageCopy } from '@/utils/stage';
+import { CareCaseStage } from '@/types/workflow';
+
+const ORDER_PROGRESS_STEPS = [
+  {
+    key: 'approved',
+    title: 'Insurance approved',
+    description: 'Authorization received and shared with the care team.',
+  },
+  {
+    key: 'patient-confirmed',
+    title: 'Patient confirmed',
+    description: 'Patient received the cost summary and confirmed delivery details.',
+  },
+  {
+    key: 'staging',
+    title: 'Order staged',
+    description: 'Clinical team preparing the prescribed device and paperwork.',
+  },
+  {
+    key: 'logistics',
+    title: 'Delivery scheduled',
+    description: 'Pickup or courier window reserved with the patient.',
+  },
+  {
+    key: 'delivered',
+    title: 'Delivered / picked up',
+    description: 'Patient has the device and the case can be archived.',
+  },
+] as const;
+
+const stageToStepIndex = (stage: CareCaseStage): number | null => {
+  switch (stage) {
+    case 'insurance-response-received':
+      return 0;
+    case 'awaiting-patient-action':
+      return 0;
+    case 'ready-for-fulfillment':
+      return 3;
+    case 'completed':
+      return ORDER_PROGRESS_STEPS.length - 1;
+    default:
+      return null;
+  }
+};
+
+const stageEtaMessage = (stage: CareCaseStage): string | undefined => {
+  switch (stage) {
+    case 'awaiting-patient-action':
+      return 'Waiting on patient confirmation to finalise delivery arrangements.';
+    case 'ready-for-fulfillment':
+      return 'Delivery crew scheduled within the next 24 hours.';
+    case 'completed':
+      return 'Delivered to patient.';
+    default:
+      return undefined;
+  }
+};
 
 export default function PatientScreen() {
   const {
@@ -71,11 +129,26 @@ export default function PatientScreen() {
     });
   };
 
+  const renderOrderTracker = (stage: CareCaseStage) => {
+    const step = stageToStepIndex(stage);
+    if (step === null) {
+      return null;
+    }
+
+    return (
+      <View className="mt-4">
+        <OrderStatusTracker
+          steps={ORDER_PROGRESS_STEPS}
+          currentStep={step}
+          etaLabel={stageEtaMessage(stage)}
+        />
+      </View>
+    );
+  };
+
   return (
     <Screen>
-      <View
-        style={{ marginTop: 32 }}
-        className="gap-6">
+      <View className="gap-6">
         <View className="gap-2">
           <Text className="text-3xl font-semibold text-slate-900 dark:text-slate-100">
             Patient Experience
@@ -104,15 +177,16 @@ export default function PatientScreen() {
                 description={stageCopy[item.stage].hint}>
                 <View className="flex-row items-center justify-between">
                   <Badge tone={stageCopy[item.stage].tone}>{stageCopy[item.stage].label}</Badge>
-                  {/* <Text className="text-xs text-slate-500 dark:text-slate-400"> */}
-                  {/*   Updated {formatRelativeTime(item.updatedAt)} */}
-                  {/* </Text> */}
+                  <Text className="text-xs text-slate-500 dark:text-slate-400">
+                    Updated {formatRelativeTime(item.updatedAt)}
+                  </Text>
                 </View>
-                {/* {item.paymentLink && ( */}
-                {/*   <Text className="mt-2 text-xs text-sky-600 dark:text-sky-300"> */}
-                {/*     Payment link on file: {item.paymentLink} */}
-                {/*   </Text> */}
-                {/* )} */}
+                {item.paymentLink && (
+                  <Text className="mt-2 text-xs text-sky-600 dark:text-sky-300">
+                    Payment link on file: {item.paymentLink}
+                  </Text>
+                )}
+                {renderOrderTracker(item.stage)}
               </Card>
             ))
           )}
@@ -161,30 +235,53 @@ export default function PatientScreen() {
             title="Fulfillment"
             subtitle="Confirm when the patient purchases and schedules."
           />
-          <Card>
+          {readyForFulfillment.length === 0 ? (
+            <Card
+              title="No cases awaiting fulfillment"
+              description="Once patients confirm delivery we will surface them here."
+            />
+          ) : (
             <View className="gap-4">
-              <View className="flex-row flex-wrap gap-2">
-                {readyForFulfillment.map((item) => (
+              {readyForFulfillment.map((item) => (
+                <Card
+                  key={item.id}
+                  title={`${item.patientName} • ${item.product}`}
+                  description={stageCopy[item.stage].hint}>
+                  <View className="flex-row items-center justify-between">
+                    <Badge tone={stageCopy[item.stage].tone}>{stageCopy[item.stage].label}</Badge>
+                    <Text className="text-xs text-slate-500 dark:text-slate-400">
+                      Updated {formatRelativeTime(item.updatedAt)}
+                    </Text>
+                  </View>
+                  {renderOrderTracker(item.stage)}
                   <Button
-                    key={item.id}
                     variant={selectedCompletionCase === item.id ? 'primary' : 'secondary'}
-                    className="min-w-[140px]"
+                    className="mt-4"
                     onPress={() => setSelectedCompletionCase(item.id)}>
-                    {item.patientName}
+                    {selectedCompletionCase === item.id
+                      ? 'Selected for completion'
+                      : 'Select for completion'}
                   </Button>
-                ))}
-              </View>
-              <Input
-                label="Outcome"
-                value={fulfillmentDetails}
-                onChangeText={setFulfillmentDetails}
-                multiline
-              />
-              <Button onPress={handleComplete} disabled={!selectedCompletionCase}>
-                Mark as fulfilled
-              </Button>
+                </Card>
+              ))}
+
+              <Card
+                title="Finalize fulfillment"
+                description="Document the outcome once the patient receives their item.">
+                <View className="gap-4">
+                  <Input
+                    label="Outcome"
+                    value={fulfillmentDetails}
+                    onChangeText={setFulfillmentDetails}
+                    multiline
+                  />
+                  <Button onPress={handleComplete} disabled={!selectedCompletionCase}>
+                    Mark as fulfilled
+                  </Button>
+                </View>
+              </Card>
             </View>
-          </Card>
+          )}
         </View>
 
         <View className="gap-4">

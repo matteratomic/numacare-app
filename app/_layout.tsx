@@ -8,6 +8,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { WorkflowProvider } from '@/context/WorkflowContext';
 
+console.disableYellowBox = true;
+
 export default function RootLayout() {
   return (
     <View style={{ flex: 1 }}>
@@ -23,12 +25,24 @@ export default function RootLayout() {
 }
 
 function AppNavigator() {
-  const {
-    state: { isAuthenticated, hasCompletedOnboarding },
-  } = useAuth();
-  const segments = useSegments();
+  // const {
+  //   state: { isAuthenticated, hasCompletedOnboarding },
+  // } = useAuth();
+  // const segments = useSegments();
   const navigationState = useRootNavigationState();
   const router = useRouter();
+
+  if (!navigationState?.key) {
+    return null;
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (navigationState?.key) {
+        router.replace('/onboarding');
+      }
+    }, 50)
+  }, [navigationState?.key])
 
   // useEffect(() => {
   //   if (!navigationState?.key) {
@@ -56,12 +70,10 @@ function AppNavigator() {
   //   }
   // }, [hasCompletedOnboarding, isAuthenticated, navigationState?.key, router, segments]);
 
-  if (!navigationState?.key) {
-    return null;
-  }
 
   return (
     <Stack
+      initialRouteName='onboarding'
       screenOptions={{
         headerShown: false,
         contentStyle: {
@@ -70,6 +82,7 @@ function AppNavigator() {
       }}>
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="statustracker" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen
         name="documents/[id]"

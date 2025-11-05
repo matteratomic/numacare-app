@@ -57,8 +57,8 @@ export default function LoginScreen() {
               onChangeText={setPassword}
               placeholder="••••••••"
             />
-            {message && <Text className="text-sm text-amber-300">{message}</Text>}
-            <Text style={{ color: 'white' }} className="text-sm">
+            {message && <Text style={{ color: "rgba(255,255,255,0)" }} className="text-sm">{message}</Text>}
+            <Text style={{ color: "rgba(255,255,255,0)" }} className="text-sm">
               Enter an email and password to access the portal mock-up.
             </Text>
             <Button onPress={handleSubmit}>Enter portal</Button>
