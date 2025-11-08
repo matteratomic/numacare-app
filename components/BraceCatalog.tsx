@@ -9,6 +9,8 @@ import {
   Modal,
   Pressable,
   ScrollView,
+  TextInput,
+  Platform,
 } from "react-native";
 
 const PRIMARY = "#0ea5e9";
@@ -69,7 +71,7 @@ const DEMO_PRODUCTS: Product[] = [
     description:
       "Breathable hinged knee brace that supports MCL/LCL with adjustable straps and lightweight frame.",
     sides: ["Left", "Right", "Both"],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["Ankle", "Calf", "Thigh"],
   },
   {
     id: "Arm Guard Plus",
@@ -83,7 +85,7 @@ const DEMO_PRODUCTS: Product[] = [
     description:
       "Effective post-mastectomy lymphedema therapy. AIROS Medical's Arm Plus garments treat lymphedema present in the arm, shoulder and upper truncal region.",
     sides: ["Left", "Right"],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["Forecep", "Bicep", "Shoulder"],
   },
   {
     id: "Aeros Compression Pump",
@@ -97,7 +99,7 @@ const DEMO_PRODUCTS: Product[] = [
       "The AIROS Pump is an FDtA-cleuared Sequential Compression Device that provides intermittent pneumatic compression therapy treatment for both the upper and lower extremities as well as the trunk. This device features chambers that inflate and deflate, providing advanced treatment options for patients suffering from lymphedema in the legs or arms, abdominal and pelvic swelling, breast-cancer related lymphedema, lipedema, or venous insufficiency.",
     // sides: ["Left", "Right", "Both"],
     sides: ["Aeros 6 EO651", "Aeros 8 E0652"],
-    sizes: ["S", "M", "L", "XL"],
+    // sizes: ["S", "M", "L", "XL"],
   },
 
 ]
@@ -199,7 +201,7 @@ export default function BraceCatalog({
       />
 
       {/* Detail Modal */}
-      <Modal visible={open} presentationStyle="pageSheet" animationType="slide" onRequestClose={closeModal} transparent>
+      <Modal visible={open} presentationStyle="formSheet" animationType="slide" onRequestClose={closeModal}>
         <View style={{ height, backgroundColor: "rgba(0,0,0,0.5)" }} className="h-screen flex-1 bg-black/30">
           <View className="flex-1 mt-auto bg-white rounded-t-3xl overflow-hidden">
             {/* Header image */}
@@ -238,25 +240,40 @@ export default function BraceCatalog({
 
               {/* Config: Size */}
               {!!active?.sizes?.length && (
-                <View className="mt-2">
-                  <Text className="text-gray-700 font-semibold mb-2">Size</Text>
-                  <View className="flex-row flex-wrap">
+                <View className="mt-6">
+                  <Text className="text-gray-700 font-semibold mb-2">Measurements</Text>
+                  <View className="flex-row items-center mt-2">
                     {active.sizes.map((s) => (
-                      <Chip key={s} label={s} selected={size === s} onPress={() => setSize(s)} />
+                      <View key={s} style={{ marginRight: 16 }} className="flex flex-row">
+                        <Text style={{ color: "#111827", fontWeight: "600" }}>
+                          {s}
+                        </Text>
+                        <TextInput keyboardType="numeric" className="font-semibold text-center"
+                          style={{
+                            borderBottomWidth: 1,
+                            height: Platform.OS === 'android' ? 8 : "auto",
+                            borderBottomColor: "black",
+                            width: 32,
+                            marginLeft: 4
+                          }} />
+                        <Text className="text-sm" style={{ color: "#111827", fontWeight: "600" }}>
+                          cm
+                        </Text>
+                      </View>
                     ))}
                   </View>
                 </View>
               )}
 
               {/* Description */}
-              <Text style={{ lineHeight: 20 }} className="text-gray-600 text-lg mt-3">
+              <Text style={{ lineHeight: 20 }} className="text-gray-600 text-lg mt-4">
                 {active?.description ??
                   "Medical-grade brace designed for stability and comfort during rehabilitation."}
               </Text>
 
               {/* Price row */}
-              <View style={{ marginTop: 64 }} className="flex-1 flex-row items-center justify-between">
-                <PriceRow product={active ?? DEMO_PRODUCTS[0]} />
+              <View style={{ marginTop: 64, marginBottom: 16, transform: [{ translateY: -16 }] }}
+                className="flex-1 flex-row items-center justify-between">
                 <Pressable
                   disabled={!canAdd}
                   onPress={() => {
@@ -265,13 +282,13 @@ export default function BraceCatalog({
                     }
                     closeModal();
                   }}
-                  className="rounded-2xl px-6 py-3"
+                  className="w-full rounded-2xl px-6 py-3"
                   style={{
                     paddingHorizontal: 24,
                     backgroundColor: canAdd ? PRIMARY : "#c7eaf9",
                   }}
                 >
-                  <Text className="text-white font-semibold">Select item</Text>
+                  <Text className="text-white text-center font-semibold">Select item</Text>
                 </Pressable>
               </View>
 
@@ -289,34 +306,3 @@ export default function BraceCatalog({
     </View>
   );
 }
-
-/** Demo data (limb braces) */
-// const DEMO_PRODUCTS: Product[] = [
-//   {
-//     id: "knee-pro-1",
-//     name: "Knee Stabilizer Pro",
-//     price: 79.0,
-//     compareAtPrice: 99.0,
-//     rating: 4.7,
-//     reviews: 1537,
-//     image: "https://www.shockdoctor.com/cdn/shop/products/SD870-01_KneeStabilizerFlexStays_onBody-1_2048x.jpg?v=1738002197",
-//     description:
-//       "Breathable hinged knee brace that supports MCL/LCL with adjustable straps and lightweight frame.",
-//     sides: ["Left", "Right", "Both"],
-//     sizes: ["S", "M", "L", "XL"],
-//   },
-//   {
-//     id: "ankle-lite-1",
-//     name: "Ankle Support Lite",
-//     price: 29.9,
-//     rating: 4.5,
-//     reviews: 820,
-//     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMwwNpLRuANXSANcbZQGW0M0JeRSSY1yzlyg&s",
-//     description:
-//       "Compression ankle sleeve for everyday use. Reduces swelling and offers mild stabilization.",
-//     sides: ["Left", "Right", "Both"],
-//     sizes: ["XS", "S", "M", "L"],
-//   },
-//   {
-//     id: "wrist-neo-1",
-//     name: "Wrist NeoGuard",

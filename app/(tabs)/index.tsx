@@ -9,6 +9,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useWorkflow } from '@/context/WorkflowContext';
 import { formatRelativeTime } from '@/utils/dates';
 import { StatusBar } from 'expo-status-bar';
+import { useLocalSearchParams } from 'expo-router'
+import { useEffect } from 'react';
 
 export default function OverviewScreen() {
   const {
@@ -18,7 +20,8 @@ export default function OverviewScreen() {
   const {
     state: { userEmail },
   } = useAuth();
-
+  const params = useLocalSearchParams()
+  const { tab = '' } = params
   const activeCases = cases.filter((item) => item.stage !== 'completed');
   const completedCases = cases.filter((item) => item.stage === 'completed');
   const doctorAlerts = notifications.filter((note) => note.audience === 'doctor' && !note.read);
@@ -130,6 +133,7 @@ export default function OverviewScreen() {
           </View>
         </View>
         <TabGroup
+          currentTab={tab}
           tabs={[
             { key: 'snapshot', label: 'Snapshot', content: snapshot },
             { key: 'cases', label: 'Cases', content: casesPanel },

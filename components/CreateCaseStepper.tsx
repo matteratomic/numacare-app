@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import React, { useMemo, useState } from "react";
 import { Dimensions, View, Text, ScrollView, Image, Modal } from "react-native";
 import BraceCatalog from "./BraceCatalog";
+import { useRouter } from "expo-router";
 
 // PRIMARY color for accents
 const PRIMARY = "#0ea5e9";
@@ -217,6 +218,7 @@ export default function CreateCaseStepper() {
   const [documentTitle, setDocumentTitle] = useState("");
   const [notes, setNotes] = useState("");
 
+  const router = useRouter();
   const [chartUploads, setChartUploads] = useState<any[]>([]);
   const [measurementUploads, setMeasurementUploads] = useState<any[]>([]);
 
@@ -251,7 +253,15 @@ export default function CreateCaseStepper() {
     const pass = Object.values(result).every(Boolean);
     setAiSummary(pass ? "Everything looks good ✅" : "Missing items — please review.");
   };
-  const handleSubmit = () => setFormMessage("Submitted to NumaCare ✔");
+
+  const handleSubmit = () => {
+    setFormMessage("Submitted to NumaCare ✔")
+    console.log('Hello')
+    router.push({
+      pathname: "(tabs)/",
+      params: { tab: "cases" }
+    })
+  };
   // ── Steps config: title + render + optional validate() ───────────────────────
   const steps = useMemo(
     () => [
