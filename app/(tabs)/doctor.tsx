@@ -323,13 +323,13 @@ export default function DoctorScreen() {
         <View className="gap-3">
           <View className="flex-row gap-2">
             <Button variant="secondary" onPress={handleCaptureChartNote} className="flex-1">
-              Capture chart notes (camera)
+              Capture demographic & insurance (camera)
             </Button>
             <Button
               variant="secondary"
               onPress={() => mockUpload('measurement')}
               className="flex-1">
-              Scan measurements (mock)
+              Capture demographic & insurance (manual)
             </Button>
           </View>
           <View className="gap-2">

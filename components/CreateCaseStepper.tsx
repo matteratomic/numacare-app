@@ -210,7 +210,7 @@ function ESign() {
 
 export default function CreateCaseStepper() {
   const [documentType, setDocumentType] = useState<"prescription" | "clinical-report">("prescription");
-  const [doctorName, setDoctorName] = useState("");
+  const [doctorName, setDoctorName] = useState("Dr. Travis Davenport");
   const [patientName, setPatientName] = useState("");
   const [insuranceProvider, setInsuranceProvider] = useState("");
   const [diagnosis, setDiagnosis] = useState("");
@@ -259,10 +259,11 @@ export default function CreateCaseStepper() {
         key: "create",
         title: "Create case",
         validate: () => {
-          if (!doctorName || !patientName || !documentTitle) {
-            setFormMessage("Please fill Doctor, Patient and Document title.");
-            return false;
-          }
+          // if (!doctorName || !patientName || !documentTitle) {
+          // if (!doctorName || !patientName) {
+          //   setFormMessage("Please fill Doctor, Patient and Document title.");
+          //   return false;
+          // }
           setFormMessage(null);
           return true;
         },
@@ -274,42 +275,40 @@ export default function CreateCaseStepper() {
                 <Button
                   variant={documentType === "prescription" ? "primary" : "outline"}
                   onPress={() => setDocumentType("prescription")}
-                  className="flex-1"
-                >
-                  Prescription
+                  // className="flex-1 w-1/2"
+                  >
+                  New Case
                 </Button>
                 <Button
                   variant={documentType === "clinical-report" ? "primary" : "outline"}
                   onPress={() => setDocumentType("clinical-report")}
-                  className="flex-1"
-                >
-                  Clinical note
+                  // className="flex-1 w-64"
+                  >
+                  Select Patient
                 </Button>
               </View>
               <Input label="Doctor name" value={doctorName} onChangeText={setDoctorName} placeholder="Dr. Lee" />
               <Input label="Patient" value={patientName} onChangeText={setPatientName} placeholder="Jamie Rivera" />
-              <Input
+              {/*
+<Input
                 label="Insurance"
                 value={insuranceProvider}
                 onChangeText={setInsuranceProvider}
                 placeholder="Summit Health"
               />
+
               <Input label="Diagnosis" value={diagnosis} onChangeText={setDiagnosis} placeholder="ICD-10 details" />
-              <Input
+                */}
+              {/*
+<Input
                 label="Document title"
                 value={documentTitle}
                 onChangeText={setDocumentTitle}
                 placeholder="Prescription details"
               />
-              <Input
-                style={{ width: 300 }}
-                label="Notes for portal"
-                value={notes}
-                onChangeText={setNotes}
-                placeholder="Instructions or context to include for insurance"
-                multiline
-              />
-            </View>
+
+                */}
+              </View>
           </Card>
         ),
       },
