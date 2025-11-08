@@ -8,6 +8,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { WorkflowProvider } from '@/context/WorkflowContext';
 
+
+console.error = (error) => error.apply;
 console.disableYellowBox = true;
 
 export default function RootLayout() {
