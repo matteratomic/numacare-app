@@ -74,10 +74,10 @@ function DocumentIntake() {
     <View className="gap-3">
       <View className="flex-row gap-2">
         <Button variant="secondary" onPress={handleCaptureChartNote} className="flex-1">
-          Capture chart notes (camera)
+          Capture Demographic & Insurance (Camera)
         </Button>
         <Button variant="secondary" onPress={() => mockUpload("measurement")} className="flex-1">
-          Scan measurements (mock)
+          Capture Demographic & Insurance (Manual)
         </Button>
       </View>
 
@@ -275,15 +275,15 @@ export default function CreateCaseStepper() {
                 <Button
                   variant={documentType === "prescription" ? "primary" : "outline"}
                   onPress={() => setDocumentType("prescription")}
-                  // className="flex-1 w-1/2"
-                  >
+                // className="flex-1 w-1/2"
+                >
                   New Case
                 </Button>
                 <Button
                   variant={documentType === "clinical-report" ? "primary" : "outline"}
                   onPress={() => setDocumentType("clinical-report")}
-                  // className="flex-1 w-64"
-                  >
+                // className="flex-1 w-64"
+                >
                   Select Patient
                 </Button>
               </View>
@@ -308,7 +308,7 @@ export default function CreateCaseStepper() {
               />
 
                 */}
-              </View>
+            </View>
           </Card>
         ),
       },

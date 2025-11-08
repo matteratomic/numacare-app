@@ -27,11 +27,11 @@ export default function TabsLayout() {
 
       }} />
       <Tabs.Screen name="doctor" options={{
-        title: 'Doctor',
+        title: 'Provider',
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="stethoscope" size={size} color={color} />
         ),
       }} />
-      </Tabs>
+    </Tabs>
   );
 }
